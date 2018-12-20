@@ -3,7 +3,7 @@ package Launchers;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import Game.SpaceGame;
+import Game.SonicGame;
 
 public class Launcher
 {
@@ -20,6 +20,6 @@ public class Launcher
     	config.width = WINDOW_WIDTH;
     	config.height = WINDOW_HEIGHT;
     	config.resizable = false;
-    	new LwjglApplication(new SpaceGame(), config);
+    	new LwjglApplication(new SonicGame(), config);
     }
 }

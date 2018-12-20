@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Summative-Workspace/Summative/src"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-backend-lwjgl-natives.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-backend-lwjgl.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-box2d-natives.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-box2d.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-controllers-desktop-natives.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-controllers-desktop.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-controllers.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx-natives.jar"/>
+	<classpathentry kind="lib" path="Summative-Workspace/Summative/Lib/gdx.jar"/>
+	<classpathentry kind="output" path="Summative-Workspace/Summative/bin"/>
+</classpath>

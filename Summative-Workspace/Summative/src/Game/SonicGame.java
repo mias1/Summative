@@ -6,16 +6,18 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import Screens.MainGameScreen;
 import Screens.MainMenuScreen;
+import Screens.StartMenuScreen;
 
-public class SpaceGame extends Game {
+public class SonicGame extends Game {
 	
 	public SpriteBatch batch;
 	
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new StartMenuScreen(this));
 	}
 
 	@Override

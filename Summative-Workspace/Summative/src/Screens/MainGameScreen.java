@@ -71,7 +71,6 @@ public class MainGameScreen implements Screen {
 		game.batch.begin();
 	
 		game.batch.draw(skyBackground, 0, 0, 800, 400);
-		
 		game.batch.draw(run[0].getKeyFrame(stateTime, true), x, y, CHARACTER_WIDTH, CHARACTER_HEIGHT);
 			
 		game.batch.end();

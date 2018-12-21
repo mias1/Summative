@@ -17,7 +17,7 @@ public class SonicGame extends Game {
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		this.setScreen(new MainGameScreen(this));
+		this.setScreen(new StartMenuScreen(this));
 	}
 
 	@Override

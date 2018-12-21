@@ -23,12 +23,14 @@ public class StartMenuScreen implements Screen {
 	Texture playButtonActive;
 	Texture playButtonInactive;
 	Texture skyBackground;
+	Texture title;
 	
 	public StartMenuScreen(SonicGame game) {
 		this.game = game;
 		playButtonActive = new Texture("Summative-Workspace/Summative/assets/play_button_active.png");
 		playButtonInactive = new Texture("Summative-Workspace/Summative/assets/play_button_inactive.png");
 		skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
+		title = new Texture("Summative-Workspace/Summative/assets/Title.png");
 		backgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Summative-Workspace/Summative/music/MainMenuTheme.ogg"));
 		backgroundMusic.loop(0.05f);
 	}
@@ -55,6 +57,7 @@ public class StartMenuScreen implements Screen {
 		game.batch.begin();
 		
 		game.batch.draw(skyBackground, 0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		game.batch.draw(title, Launcher.WINDOW_WIDTH / 2 - 400 / 2, Launcher.WINDOW_HEIGHT - 150, 400, 150);
 		
 		int x = Launcher.WINDOW_WIDTH / 2 - PLAY_BUTTON_WIDTH / 2;
 		

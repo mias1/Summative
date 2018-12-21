@@ -8,12 +8,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
 import Game.SonicGame;
+import Launchers.Launcher;
 
 public class MainMenuScreen implements Screen {
 	
 	public static final float SPEED = 120;
 	
-	Texture img;
+	Texture sonic;
+	Texture tails;
+	Texture knuckles;
+	Texture amy;
 	float x;
 	float y;
 	
@@ -31,29 +35,24 @@ public class MainMenuScreen implements Screen {
 	
 	@Override
 	public void show() {
-		img = new Texture("Summative-Workspace/Summative/assets/Sonic.jpg");
+		sonic = new Texture("Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonic_select.png");
+		tails = new Texture("Summative-Workspace/Summative/Character Sprites/Tails Sprites/tails_select.png");
+		knuckles = new Texture("Summative-Workspace/Summative/Character Sprites/Knuckles Sprites/knuckles_select.png");
+		amy = new Texture("Summative-Workspace/Summative/Character Sprites/Amy Sprites/amy_select.png");
 	}
 	
 	@Override
 	public void render(float arg0) {
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0.5f, 0.5f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		
-		if(Gdx.input.isKeyPressed(Keys.UP)) {
-			y += SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-			y -= SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			x -= SPEED * Gdx.graphics.getDeltaTime();
-		}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			x += SPEED * Gdx.graphics.getDeltaTime();
-		}
+		//if((Gdx.input.getX() < 122 + sonic.getWidth() && Gdx.input.getX() > 122) && (Launcher.WINDOW_HEIGHT - Gdx.input.getY() < 160 + sonic.getHeight() && Launcher.WINDOW_HEIGHT - Gdx.input.getY() > 160)) {}
 		
-		game.batch.draw(img, x, y);
+	    game.batch.draw(sonic, 122, 160);
+	    game.batch.draw(tails, 222, 160);
+		game.batch.draw(knuckles, 322, 160);
+		game.batch.draw(amy, 422, 160); 
 		
 		game.batch.end();
 	}

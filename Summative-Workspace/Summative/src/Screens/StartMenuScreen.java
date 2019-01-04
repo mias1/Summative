@@ -25,6 +25,9 @@ public class StartMenuScreen implements Screen {
 	Texture skyBackground;
 	Texture title;
 	
+	int xBackground1 = 0;
+	int xBackground2 = -600;
+	
 	public StartMenuScreen(SonicGame game) {
 		this.game = game;
 		playButtonActive = new Texture("Summative-Workspace/Summative/assets/play_button_active.png");
@@ -56,7 +59,18 @@ public class StartMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		
-		game.batch.draw(skyBackground, 0, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		game.batch.draw(skyBackground, xBackground1, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		game.batch.draw(skyBackground, xBackground2, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		
+		if(xBackground1==600) {
+			xBackground1=-600;
+		}
+		if(xBackground2==600) {
+			xBackground2=-600;
+		}
+		xBackground1+=5;
+		xBackground2+=5;
+		
 		game.batch.draw(title, Launcher.WINDOW_WIDTH / 2 - 400 / 2, Launcher.WINDOW_HEIGHT - 150, 400, 150);
 		
 		int x = Launcher.WINDOW_WIDTH / 2 - PLAY_BUTTON_WIDTH / 2;

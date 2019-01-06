@@ -58,28 +58,64 @@ public class MainMenuScreen implements Screen {
 		
 		if((Gdx.input.getX() < 122 + SONIC_BUTTON_WIDTH && Gdx.input.getX() > 122) && 
 		(Launcher.WINDOW_HEIGHT - Gdx.input.getY() < 160 + SONIC_BUTTON_HEIGHT && Launcher.WINDOW_HEIGHT - Gdx.input.getY() > 160)) {
+			
 			game.batch.draw(sonic, 122, 160, SONIC_BUTTON_WIDTH * 1.2f, SONIC_BUTTON_HEIGHT * 1.2f);
+			
+			if(Gdx.input.isTouched()) {
+				buttonSE.play(0.1f);
+				backgroundMusic.stop();
+				this.dispose();
+				game.setScreen(new MainGameScreen(game, "sonic"));
+			}
+			
 		}else {
 			game.batch.draw(sonic, 122, 160);
 		}
 				
 		if((Gdx.input.getX() < 222 + TAILS_BUTTON_WIDTH && Gdx.input.getX() > 222) && 
 		(Launcher.WINDOW_HEIGHT - Gdx.input.getY() < 160 + TAILS_BUTTON_HEIGHT && Launcher.WINDOW_HEIGHT - Gdx.input.getY() > 160)) {
+			
 			game.batch.draw(tails, 222, 160, TAILS_BUTTON_WIDTH * 1.2f, TAILS_BUTTON_HEIGHT * 1.2f);
+			
+			if(Gdx.input.isTouched()) {
+				buttonSE.play(0.1f);
+				backgroundMusic.stop();
+				this.dispose();
+				game.setScreen(new MainGameScreen(game, "tails"));
+			}
+			
 		}else {
 			game.batch.draw(tails, 222, 160);
 		}
 				
 		if((Gdx.input.getX() < 322 + KNUCKLES_BUTTON_WIDTH && Gdx.input.getX() > 322) && 
 		(Launcher.WINDOW_HEIGHT - Gdx.input.getY() < 160 + KNUCKLES_BUTTON_HEIGHT && Launcher.WINDOW_HEIGHT - Gdx.input.getY() > 160)) {
+			
 			game.batch.draw(knuckles, 322, 160, KNUCKLES_BUTTON_WIDTH * 1.2f, KNUCKLES_BUTTON_HEIGHT * 1.2f);
+			
+			if(Gdx.input.isTouched()) {
+				buttonSE.play(0.1f);
+				backgroundMusic.stop();
+				this.dispose();
+				game.setScreen(new MainGameScreen(game, "knuckles"));
+			}
+			
 		}else {
 			game.batch.draw(knuckles, 322, 160);
 		}
 			
 		if((Gdx.input.getX() < 422 + AMY_BUTTON_WIDTH && Gdx.input.getX() > 422) && 
 		(Launcher.WINDOW_HEIGHT - Gdx.input.getY() < 160 + AMY_BUTTON_HEIGHT && Launcher.WINDOW_HEIGHT - Gdx.input.getY() > 160)) {
+			
 			game.batch.draw(amy, 422, 160, AMY_BUTTON_WIDTH * 1.2f, AMY_BUTTON_HEIGHT * 1.2f);
+			
+			if(Gdx.input.isTouched()) {
+				buttonSE.play(0.1f);
+				backgroundMusic.stop();
+				this.dispose();
+				game.setScreen(new MainGameScreen(game, "amy"));
+			}
+			
 		}else {
 			game.batch.draw(amy, 422, 160);
 		}

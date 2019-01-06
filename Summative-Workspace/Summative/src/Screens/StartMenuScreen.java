@@ -62,14 +62,14 @@ public class StartMenuScreen implements Screen {
 		game.batch.draw(skyBackground, xBackground1, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		game.batch.draw(skyBackground, xBackground2, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		
-		if(xBackground1==600) {
+		if(xBackground1>=600) {
 			xBackground1=-600;
 		}
-		if(xBackground2==600) {
+		if(xBackground2>=600) {
 			xBackground2=-600;
 		}
-		xBackground1+=5;
-		xBackground2+=5;
+		xBackground1 += 5;
+		xBackground2 += 5;
 		
 		game.batch.draw(title, Launcher.WINDOW_WIDTH / 2 - 400 / 2, Launcher.WINDOW_HEIGHT - 150, 400, 150);
 		

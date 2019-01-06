@@ -15,9 +15,9 @@ public class MainGameScreen implements Screen {
 
 	public static final float SPEED = 120;
 	
-	public static final float CHARACTER_ANIMATION_SPEED = 0.047f;
-	public static final int CHARACTER_WIDTH = 89;
-	public static final int CHARACTER_HEIGHT = 88;
+	public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
+	public static final int CHARACTER_WIDTH = 55;
+	public static final int CHARACTER_HEIGHT = 60;
 	
 	float x;
 	float characterY;
@@ -27,7 +27,7 @@ public class MainGameScreen implements Screen {
 	int xStart;
 	int xBackground2;
 	int xLimit;
-	int speed;
+	int backgroundSpeed;
 	
 	SonicGame game;
 	
@@ -36,28 +36,38 @@ public class MainGameScreen implements Screen {
 	Animation[] run; 
 	
 	String jumpState = "Ground";
-	float jumpSpeed = 50 * Gdx.graphics.getDeltaTime();
-	float gravity = 10 * Gdx.graphics.getDeltaTime();
+	float jumpSpeed = 15;
+	float gravity = 0.75f;
 	int ground;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
 		ground = 30;
-		characterY = 30;
+		characterY = 41;
 		x = 10;
 		
 		xBackground1 = 0;
 		xBackground2 = Launcher.WINDOW_WIDTH;
 		xStart =  xBackground2;
 		xLimit = Launcher.WINDOW_WIDTH * -1;
-		speed = 5;
+		backgroundSpeed = 3;
 		
-		run = new Animation[8];
+		run = new Animation[1];
 		
-		TextureRegion[][] rightSonicRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonicRunR.png"), 59, 58);
+		TextureRegion[][] rightSonicRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Sonic Sprites/SonicRunningRight.png"), 21, 25);
+		TextureRegion[][] rightTailsRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Tails Sprites/TailsRunningRight.png"), 30, 26);
+		TextureRegion[][] rightKnucklesRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Knuckles Sprites/KnucklesRunR.png"), 45, 43);
 		
 		if(characterSelected.equalsIgnoreCase("sonic")) {
 			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightSonicRunSpriteSheet[0]);
+		}
+		
+		if(characterSelected.equalsIgnoreCase("tails")) {
+			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightTailsRunSpriteSheet[0]);
+		}
+		
+		if(characterSelected.equalsIgnoreCase("knuckles")) {
+			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightKnucklesRunSpriteSheet[0]);
 		}
 		
 	}
@@ -79,14 +89,15 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		//System.out.println(jumpState);
 		if(jumpState.equalsIgnoreCase("Descending")) {
 			characterY -= jumpSpeed;
 			jumpSpeed += gravity;
 			
-			if(characterY >= ground) {
+			if(jumpSpeed >= 15) {
 				jumpState = "Ground";
-				characterY = ground;
-				jumpSpeed = 50 * Gdx.graphics.getDeltaTime();
+				characterY = 41;
+				jumpSpeed = 15;
 			}
 		} else if(jumpState.equalsIgnoreCase("Ascending")) {
 			characterY += jumpSpeed;
@@ -133,8 +144,8 @@ public class MainGameScreen implements Screen {
 			xBackground2 = xStart;
 		}
 		
-		xBackground1 -= speed;
-		xBackground2 -= speed;
+		xBackground1 -= backgroundSpeed;
+		xBackground2 -= backgroundSpeed;
 		
 		game.batch.draw(run[0].getKeyFrame(stateTime, true), x, characterY, CHARACTER_WIDTH, CHARACTER_HEIGHT);
 		

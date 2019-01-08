@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import Game.SonicGame;
 import Launchers.Launcher;
+import Tools.Background;
+import Tools.HorizontalScrollingBackgroundPiece;
 import Tools.MoveMechanics;
 
 public class MainGameScreen extends MoveMechanics implements Screen {
@@ -22,14 +24,11 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 	
 	float stateTime;
 	
-	int xBackground1;
-	int xStart;
-	int xBackground2;
-	int xLimit;
-	int backgroundSpeed;
 	int xFloor1;
 	int xFloor2;
 	int floorSpeed;
+	
+	public Background background, background2;
 	
 	SonicGame game;
 	
@@ -40,16 +39,12 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
 		
+		background = new Background(skyBackground, 0);
+		background2 = new Background(skyBackground, Launcher.WINDOW_WIDTH);
 		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 41);
 		
-		xBackground1 = 0;
-		xBackground2 = Launcher.WINDOW_WIDTH;
-		xStart =  xBackground2;
-		xLimit = Launcher.WINDOW_WIDTH * -1;
-		backgroundSpeed = 3;
-		
-		xFloor1 = xBackground1;
-		xFloor2 = xBackground2;
+		xFloor1 = 0;
+		xFloor2 = Launcher.WINDOW_WIDTH;
 		floorSpeed = 5;
 		
 		run = new Animation[1];
@@ -108,29 +103,13 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 	
-		game.batch.draw(skyBackground, xBackground1, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		game.batch.draw(skyBackground, xBackground2, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		game.batch.draw(background2.image, background2.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		background.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
+		background2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
 		
 		game.batch.draw(greenHillZoneFloor, xFloor1, 0, Launcher.WINDOW_WIDTH, 50);
 		game.batch.draw(greenHillZoneFloor, xFloor2, 0, Launcher.WINDOW_WIDTH, 50);
-		
-		if(xBackground1 <= xLimit) {
-			xBackground1 = xStart;
-		}
-		if(xBackground2 <= xLimit) {
-			xBackground2 = xStart;
-		}
-		if(xFloor1 <= xLimit) {
-			xFloor1 = xStart;
-		}
-		if(xFloor2 <= xLimit) {
-			xFloor2 = xStart;
-		}
-		
-		xBackground1 -= backgroundSpeed;
-		xBackground2 -= backgroundSpeed;
-		xFloor1 -= floorSpeed;
-		xFloor2 -= floorSpeed;
 		
 		game.batch.draw(run[0].getKeyFrame(stateTime, true), actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT);
 		

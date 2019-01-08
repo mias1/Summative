@@ -38,6 +38,8 @@ public class MoveMechanics {
 		this.groundLevel = groundLevel;
 	}
 	
+	//---------- Run Mechanics ----------//
+	
 	/**
 	 * Alters the X-Component of an actor, moving it to the right.
 	 */
@@ -63,6 +65,10 @@ public class MoveMechanics {
 			}
 		}
 	}
+	
+	//-----------------------------------//
+	
+	//-------- Jumping Mechanics --------//
 	
 	/**
 	 * Verifies if the actor is in the air, if it is, the process of ascending or descending continues.
@@ -128,6 +134,9 @@ public class MoveMechanics {
 		}
 	}
 	
+	//-----------------------------------//
+	
+	//------------ Verifiers ------------//
 	
 	/**
 	 * Verifies if the actor is in the air.
@@ -140,5 +149,7 @@ public class MoveMechanics {
 			return true;
 		}
 	}
+	
+	//-----------------------------------//
 	
 }

@@ -6,8 +6,35 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import Launchers.Launcher;
 
-public class HorizontalScrollingBackground {
+public class HorizontalScrollingBackgroundPiece {
 
+	public Texture bg;
+	public float startingX, endingX;
+	
+	public int speed;
+	public float x1, x2;
+	
+	public HorizontalScrollingBackgroundPiece(Texture background, float firstBackgroundStartingPoint, float secondBackgroundStartingPoint, int scrollSpeed) {
+		bg = background;
+		startingX = secondBackgroundStartingPoint;
+		endingX = firstBackgroundStartingPoint;
+		speed = scrollSpeed;
+		x1 = startingX;
+		x2 = endingX;
+	}
+	
+	public void update() {
+		if(x1 <= endingX) {
+			x1 = endingX;
+		}
+		if(x2 <= endingX) {
+			x2 = startingX;
+		}
+		
+		x1 -= speed;
+		x2 -= speed;
+	}
+	
 	//EXPERIMENTING
 	
 	/*Texture background;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
  * @author User
  *
  */
-public class MoveMechanics {
+public class CharacterMoveMechanics {
 
 	public int actorX;
 	public int actorY;

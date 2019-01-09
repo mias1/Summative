@@ -11,10 +11,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.Background;
-import Tools.HorizontalScrollingBackgroundPiece;
-import Tools.MoveMechanics;
+import Tools.CharacterMoveMechanics;
+import Tools.Enemy;
 
-public class MainGameScreen extends MoveMechanics implements Screen {
+public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
 	public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
 	public static final int CHARACTER_WIDTH = 55;
@@ -24,30 +24,29 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 	
 	float stateTime;
 	
-	int xFloor1;
-	int xFloor2;
-	int floorSpeed;
-	
 	public Background background, background2;
+	public Background floor, floor2;
+	public Enemy enemy;
 	
 	SonicGame game;
 	
 	Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
+	Texture enemyT = new Texture("Summative-Workspace/Summative/assets/assets.jpg");
 	Animation[] run; 
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
 		
-		background = new Background(skyBackground, 0);
-		background2 = new Background(skyBackground, Launcher.WINDOW_WIDTH);
-		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 41);
+		background = new Background(skyBackground, 0, 0);
+		background2 = new Background(skyBackground, Launcher.WINDOW_WIDTH, 0);
+		floor = new Background(greenHillZoneFloor, 0, 0);
+		floor2 = new Background(greenHillZoneFloor, Launcher.WINDOW_WIDTH, 0);
+		enemy = new Enemy(enemyT, 700, 48);
 		
-		xFloor1 = 0;
-		xFloor2 = Launcher.WINDOW_WIDTH;
-		floorSpeed = 5;
+		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 48);
 		
-		run = new Animation[1];
+		run = new Animation[8];
 		
 		TextureRegion[][] rightSonicRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Sonic Sprites/SonicRunningRight.png"), 21, 25);
 		TextureRegion[][] rightTailsRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Tails Sprites/TailsRunningRight.png"), 30, 26);
@@ -84,6 +83,7 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 
 	@Override
 	public void render(float delta) {
+		System.out.println(score);
 		
 		verifyIfJumping();
 		
@@ -105,13 +105,17 @@ public class MainGameScreen extends MoveMechanics implements Screen {
 	
 		game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		game.batch.draw(background2.image, background2.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		background.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
-		background2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
+		background.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
+		background2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
 		
-		game.batch.draw(greenHillZoneFloor, xFloor1, 0, Launcher.WINDOW_WIDTH, 50);
-		game.batch.draw(greenHillZoneFloor, xFloor2, 0, Launcher.WINDOW_WIDTH, 50);
+		game.batch.draw(floor.image, floor.x, 0, Launcher.WINDOW_WIDTH, 50);
+		game.batch.draw(floor2.image, floor2.x, 0, Launcher.WINDOW_WIDTH, 50);
+		floor.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
+		floor2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
 		
 		game.batch.draw(run[0].getKeyFrame(stateTime, true), actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT);
+		
+		game.batch.draw(enemy.image, enemy.x, enemy.y);
 		
 		game.batch.end();
 	}

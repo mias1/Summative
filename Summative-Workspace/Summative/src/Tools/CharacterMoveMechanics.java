@@ -127,11 +127,23 @@ public class CharacterMoveMechanics {
 		actorY -= jumpSpeed;
 		jumpSpeed += gravity;
 		
-		if(jumpSpeed >= initialJumpSpeed) {
+		if(jumpSpeed >= initialJumpSpeed + 0.5) { // The 0.5 is to make sure the character touches the ground before it can jump again
 			jumpState = "Ground";
 			actorY = groundLevel;
 			jumpSpeed = initialJumpSpeed;
 		}
+	}
+	
+	//-----------------------------------//
+	
+	//--------- Slide Mechanics ---------//
+	
+	public void slide() {
+		
+	}
+	
+	public void groundPound() {
+		
 	}
 	
 	//-----------------------------------//

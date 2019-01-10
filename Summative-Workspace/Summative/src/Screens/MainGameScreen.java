@@ -32,7 +32,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	
 	Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
-	Texture enemyT = new Texture("Summative-Workspace/Summative/assets/assets.jpg");
+	Texture enemyT = new Texture("Summative-Workspace/Summative/assets/badlogic.jpg");
 	Animation[] run; 
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
@@ -83,7 +83,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
 	@Override
 	public void render(float delta) {
-		System.out.println(score);
+		score++; System.out.println(score);
 		
 		verifyIfJumping();
 		
@@ -115,7 +115,16 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		
 		game.batch.draw(run[0].getKeyFrame(stateTime, true), actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT);
 		
-		game.batch.draw(enemy.image, enemy.x, enemy.y);
+		if(score % 500 == 0 || enemy.isOnScreen) {
+			enemy.isOnScreen = true;
+			game.batch.draw(enemy.image, enemy.x, enemy.y);
+			enemy.scroll(actorX, 3);
+			if(!enemy.isAlive(actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT) ||
+					enemy.x > - 100) {
+				enemy.isOnScreen = false;
+				enemy.x = enemy.startX;
+			}
+		}
 		
 		game.batch.end();
 	}

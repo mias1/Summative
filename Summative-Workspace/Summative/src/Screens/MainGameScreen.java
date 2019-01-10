@@ -3,19 +3,30 @@ package Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Array;
 
+import Experimenting.AnimatedActor;
 import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.Background;
 import Tools.CharacterMoveMechanics;
 import Tools.Enemy;
+import Tools.StaticActor;
 
 public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
+	public Stage mainStage;
+	
 	public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
 	public static final int CHARACTER_WIDTH = 55;
 	public static final int CHARACTER_HEIGHT = 60;
@@ -24,9 +35,10 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	
 	float stateTime;
 	
-	public Background background, background2;
-	public Background floor, floor2;
-	public Enemy enemy;
+	//public Background background, background2;
+	public StaticActor bg1, bg2;
+	//public Background floor, floor2;
+	public StaticActor floor1, floor2;
 	
 	SonicGame game;
 	
@@ -38,11 +50,39 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
 		
-		background = new Background(skyBackground, 0, 0);
-		background2 = new Background(skyBackground, Launcher.WINDOW_WIDTH, 0);
-		floor = new Background(greenHillZoneFloor, 0, 0);
-		floor2 = new Background(greenHillZoneFloor, Launcher.WINDOW_WIDTH, 0);
-		enemy = new Enemy(enemyT, 700, 48);
+		mainStage = new Stage();
+		
+		bg1 = new StaticActor();
+		bg1.setTexture(skyBackground);
+		bg1.setPosition(0, 0);
+		bg1.setOrigin(0, 0);
+		bg1.setWidth(Launcher.WINDOW_WIDTH);
+		bg1.setHeight(Launcher.WINDOW_HEIGHT);
+		mainStage.addActor(bg1);
+		
+		bg2 = new StaticActor();
+		bg2.setTexture(skyBackground);
+		bg2.setPosition(600, 0);
+		bg2.setOrigin(600, 0);
+		bg2.setWidth(Launcher.WINDOW_WIDTH);
+		bg2.setHeight(Launcher.WINDOW_HEIGHT);
+		mainStage.addActor(bg2);
+		
+		floor1 = new StaticActor();
+		floor1.setTexture(greenHillZoneFloor);
+		floor1.setPosition(0, 0);
+		floor1.setOrigin(0, 0);
+		floor1.setWidth(Launcher.WINDOW_WIDTH);
+		floor1.setHeight(50);
+		mainStage.addActor(floor1);
+		
+		floor2 = new StaticActor();
+		floor2.setTexture(greenHillZoneFloor);
+		floor2.setPosition(600, 0);
+		floor2.setOrigin(600, 0);
+		floor2.setWidth(Launcher.WINDOW_WIDTH);
+		floor2.setHeight(50);
+		mainStage.addActor(floor2);
 		
 		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 48);
 		
@@ -83,9 +123,11 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
 	@Override
 	public void render(float delta) {
-		score++; System.out.println(score);
+		score++; //System.out.println(score);
 		
-		verifyIfJumping();
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		
+		/*verifyIfJumping();
 		
 		if(Gdx.input.isKeyPressed(Keys.UP) && jumpState.equalsIgnoreCase("Ground")) {
 			initiateJump();
@@ -95,15 +137,35 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		}
 		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
 			moveLeft();
+		}*/
+		
+		//stateTime += delta;
+		
+		if(bg1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
+			bg1.setPosition(Launcher.WINDOW_WIDTH, 0);
+		}
+		if(bg2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
+			//bg2.setPosition(Launcher.WINDOW_WIDTH, 0);
+			bg2.setPosition(bg1.getX() + 600, 0);
+		}
+		if(floor1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
+			floor1.setPosition(Launcher.WINDOW_WIDTH, 0);
+		}
+		if(floor2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
+			floor2.setPosition(Launcher.WINDOW_WIDTH, 0);
 		}
 		
-		stateTime += delta;
+		bg1.speedX = -120;
+		bg2.speedX = -120;
+		floor1.speedX = -120;
+		floor2.speedX = -120;
+        
+        mainStage.act(deltaTime);
 		
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		game.batch.begin();
 	
-		game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
+		/*game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		game.batch.draw(background2.image, background2.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
 		background.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
 		background2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
@@ -124,9 +186,8 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 				enemy.isOnScreen = false;
 				enemy.x = enemy.startX;
 			}
-		}
-		
-		game.batch.end();
+		}*/
+		mainStage.draw();
 	}
 
 	@Override

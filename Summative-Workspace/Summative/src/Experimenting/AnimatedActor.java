@@ -16,13 +16,13 @@ public class AnimatedActor extends BaseActor {
 
 	 public void setAnimation(Animation a) { 
 		 Texture t = a.getKeyFrame(0).getTexture();
-	     setTexture( t );
+	     setTexture(t);
 	     animation = a;
 	 }
 
-	 public void act(float dt) {
-	     super.act( dt );
-	     elapsedTime += dt;
+	 public void act(float delta) {
+	     super.act(delta);
+	     elapsedTime += delta;
 	 if (velocityX != 0 || velocityY != 0)
 		 setRotation( MathUtils.atan2( velocityY, velocityX ) * MathUtils.radiansToDegrees );
 	 }

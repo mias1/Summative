@@ -25,8 +25,8 @@ public class StartMenuScreen implements Screen {
 	Texture skyBackground;
 	Texture title;
 	
-	int xBackground1 = 0;
-	int xBackground2 = -600;
+	int xBackground1 = -300;
+	int xBackground2 = 300;
 	
 	public StartMenuScreen(SonicGame game) {
 		this.game = game;

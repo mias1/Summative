@@ -51,7 +51,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	float jumpSpeed = JUMP_SPEED;
 	float gravity = 0.75f;
 	
-	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
+	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/clouds.png");
 	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
 	private Texture enemy00 = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
 	private AnimatedActor sonic;
@@ -65,18 +65,20 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		
 		bg1 = new StaticActor();
 		bg1.setTexture(skyBackground);
-		bg1.setPosition(0, 0);
-		bg1.setOrigin(0, 0);
+		bg1.setPosition(-300, 0);
+		bg1.setOrigin(-300, 0);
 		bg1.setWidth(Launcher.WINDOW_WIDTH);
 		bg1.setHeight(Launcher.WINDOW_HEIGHT);
+		bg1.speedX = -100;
 		mainStage.addActor(bg1);
 		
 		bg2 = new StaticActor();
 		bg2.setTexture(skyBackground);
-		bg2.setPosition(600, 0);
-		bg2.setOrigin(600, 0);
+		bg2.setPosition(300, 0);
+		bg2.setOrigin(300, 0);
 		bg2.setWidth(Launcher.WINDOW_WIDTH);
 		bg2.setHeight(Launcher.WINDOW_HEIGHT);
+		bg2.speedX = -100;
 		mainStage.addActor(bg2);
 		
 		floor1 = new StaticActor();
@@ -85,6 +87,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		floor1.setOrigin(0, 0);
 		floor1.setWidth(Launcher.WINDOW_WIDTH);
 		floor1.setHeight(50);
+		floor1.speedX = -120;
 		mainStage.addActor(floor1);
 		
 		floor2 = new StaticActor();
@@ -93,6 +96,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		floor2.setOrigin(600, 0);
 		floor2.setWidth(Launcher.WINDOW_WIDTH);
 		floor2.setHeight(50);
+		floor2.speedX = -120;
 		mainStage.addActor(floor2);
 		
 		enemy0 = new StaticActor();
@@ -207,23 +211,17 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		//stateTime += delta;
 		
 		if(bg1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			bg1.setPosition(600, 0);
+			bg1.setX(Launcher.WINDOW_WIDTH);
 		}
 		if(bg2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			//bg2.setPosition(Launcher.WINDOW_WIDTH, 0);
-			bg2.setPosition(600, 0);
+			bg2.setX(Launcher.WINDOW_WIDTH);
 		}
 		if(floor1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			floor1.setPosition(Launcher.WINDOW_WIDTH, 0);
+			floor1.setX(Launcher.WINDOW_WIDTH);
 		}
 		if(floor2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			floor2.setPosition(Launcher.WINDOW_WIDTH, 0);
+			floor2.setX(Launcher.WINDOW_WIDTH);
 		}
-		
-		bg1.speedX = -120;
-		bg2.speedX = -120;
-		floor1.speedX = -120;
-		floor2.speedX = -120;
         
 		if(!lose) {
         mainStage.act(deltaTime);
@@ -247,7 +245,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
         	timeLabel.setText("You Lose! Press ENTER to start over.");
         }
         
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
 		/*game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);

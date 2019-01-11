@@ -1,6 +1,7 @@
 package Tools;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * @author User
@@ -43,12 +44,12 @@ public class CharacterMoveMechanics {
 	/**
 	 * Alters the X-Component of an actor, moving it to the right.
 	 */
-	public void moveRight() {
-		if(actorX <= 100) {
+	public void moveRight(Actor actor) {
+		if(actor.getX() <= 100) {
 			if(actorIsInAir()) {
-				actorX += (speed - 60) * Gdx.graphics.getDeltaTime();
+				actor.setX(actor.getX() + (speed - 60) * Gdx.graphics.getDeltaTime());
 			}else {
-				actorX += speed * Gdx.graphics.getDeltaTime();
+				actor.setX(actor.getX() + speed * Gdx.graphics.getDeltaTime());
 			}
 		}
 	}
@@ -56,12 +57,12 @@ public class CharacterMoveMechanics {
 	/**
 	 * Alters the X-Component of an actor, moving it to the left.
 	 */
-	public void moveLeft() {
-		if(actorX >= 0) {
+	public void moveLeft(Actor actor) {
+		if(actor.getX() >= 0) {
 			if(actorIsInAir()) {
-				actorX -= (speed - 60) * Gdx.graphics.getDeltaTime();
+				actor.setX(actor.getX() - (speed - 60) * Gdx.graphics.getDeltaTime());
 			}else {
-				actorX -= speed * Gdx.graphics.getDeltaTime();
+				actor.setX(actor.getX() - speed * Gdx.graphics.getDeltaTime());
 			}
 		}
 	}
@@ -90,9 +91,9 @@ public class CharacterMoveMechanics {
 	/**
 	 * Starts the jump process of an actor.
 	 */
-	public void initiateJump() {
+	public void initiateJump(Actor actor) {
 		jumpState = "Ascending";
-		actorY += jumpSpeed;
+		actor.setY(actor.getY() + jumpSpeed);
 		jumpSpeed -= gravity;
 	}
 	
@@ -110,8 +111,8 @@ public class CharacterMoveMechanics {
 	/**
 	 * Makes the actor ascend.
 	 */
-	private void ascend() {
-		actorY += jumpSpeed;
+	private void ascend(Actor actor) {
+		actor.setY(actor.getY() + jumpSpeed);
 		jumpSpeed -= gravity;
 		
 		if(jumpSpeed <= 0) {
@@ -123,13 +124,13 @@ public class CharacterMoveMechanics {
 	/**
 	 * Makes the actor descend.
 	 */
-	private void descend() {
-		actorY -= jumpSpeed;
+	private void descend(Actor actor) {
+		actor.setY(actor.getY() - jumpSpeed);
 		jumpSpeed += gravity;
 		
 		if(jumpSpeed >= initialJumpSpeed + 0.5) { // The 0.5 is to make sure the character touches the ground before it can jump again
 			jumpState = "Ground";
-			actorY = groundLevel;
+			actor.setY(groundLevel);
 			jumpSpeed = initialJumpSpeed;
 		}
 	}

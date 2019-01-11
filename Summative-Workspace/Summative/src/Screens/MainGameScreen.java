@@ -10,47 +10,58 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
-import Experimenting.AnimatedActor;
 import Game.SonicGame;
 import Launchers.Launcher;
-import Tools.Background;
+import Tools.AnimatedActor;
 import Tools.CharacterMoveMechanics;
-import Tools.Enemy;
 import Tools.StaticActor;
 
 public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
+	//public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
+	//public static final int CHARACTER_WIDTH = 55;
+	//public static final int CHARACTER_HEIGHT = 60;
+	
 	public Stage mainStage;
+	public Stage uiStage;
 	
-	public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
-	public static final int CHARACTER_WIDTH = 55;
-	public static final int CHARACTER_HEIGHT = 60;
+	TextureRegion[] jumpFrames = new TextureRegion[8];
+	Animation jumpAnimation;
 	
-	private static int score = 0;
+	private float timeElapsed;
+	private Label timeLabel;
+	
+	private boolean lose;
 	
 	float stateTime;
 	
-	//public Background background, background2;
 	public StaticActor bg1, bg2;
-	//public Background floor, floor2;
 	public StaticActor floor1, floor2;
+	public StaticActor enemy0;
 	
 	SonicGame game;
 	
-	Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
-	Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
-	Texture enemyT = new Texture("Summative-Workspace/Summative/assets/badlogic.jpg");
-	Animation[] run; 
+	final float JUMP_SPEED = 15;
+	float jumpSpeed = JUMP_SPEED;
+	float gravity = 0.75f;
+	
+	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
+	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
+	private Texture enemy00 = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
+	private AnimatedActor sonic;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
 		
 		mainStage = new Stage();
+		uiStage = new Stage();
+		timeElapsed = 0;
 		
 		bg1 = new StaticActor();
 		bg1.setTexture(skyBackground);
@@ -84,26 +95,54 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		floor2.setHeight(50);
 		mainStage.addActor(floor2);
 		
+		enemy0 = new StaticActor();
+		enemy0.setTexture(enemy00);
+		enemy0.setOrigin(300, 48);
+		
+        sonic = new AnimatedActor();
+        TextureRegion[] movingFrames = new TextureRegion[8];
+        for (int n = 0; n < 8; n++)
+        {   
+            String fileName = "Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonic_run_0" + (n+1) + ".png";
+            Texture texture = new Texture(Gdx.files.internal(fileName));
+            texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            movingFrames[n] = new TextureRegion(texture);
+        }
+        Array<TextureRegion> framesArray = new Array<TextureRegion>(movingFrames);
+        
+        
+        for (int n = 0; n < 4; n++)
+        {   
+            String fileName = "Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonic_jump0" + n + ".png";
+            Texture texture = new Texture(Gdx.files.internal(fileName));
+            texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            jumpFrames[n] = new TextureRegion(texture);
+        }
+        Array<TextureRegion> jumpFramesArray = new Array<TextureRegion>(jumpFrames);
+        
+        
+        Animation moveAnimation = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP);
+        
+        jumpAnimation = new Animation(0.1f, jumpFramesArray, Animation.PlayMode.LOOP);
+        
+        sonic.setAnimation(moveAnimation);
+        sonic.setOrigin(10, 48);
+        sonic.setPosition(10, 48);
+        sonic.setWidth(55);
+        sonic.setHeight(60);
+        uiStage.addActor(sonic);
+		
+		BitmapFont font = new BitmapFont();
+		String text = "Time: 0";
+		LabelStyle style = new LabelStyle(font, Color.BLACK);
+		timeLabel = new Label(text, style);
+		timeLabel.setFontScale(2);
+		timeLabel.setPosition(15, 365);
+		uiStage.addActor(timeLabel);
+		
+		lose = false;
+		
 		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 48);
-		
-		run = new Animation[8];
-		
-		TextureRegion[][] rightSonicRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Sonic Sprites/SonicRunningRight.png"), 21, 25);
-		TextureRegion[][] rightTailsRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Tails Sprites/TailsRunningRight.png"), 30, 26);
-		TextureRegion[][] rightKnucklesRunSpriteSheet = TextureRegion.split(new Texture("Summative-Workspace/Summative/Character Sprites/Knuckles Sprites/KnucklesRunR.png"), 45, 43);
-		
-		if(characterSelected.equalsIgnoreCase("sonic")) {
-			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightSonicRunSpriteSheet[0]);
-		}
-		
-		if(characterSelected.equalsIgnoreCase("tails")) {
-			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightTailsRunSpriteSheet[0]);
-		}
-		
-		if(characterSelected.equalsIgnoreCase("knuckles")) {
-			run[0] = new Animation(CHARACTER_ANIMATION_SPEED, rightKnucklesRunSpriteSheet[0]);
-		}
-		
 	}
 	
 	@Override
@@ -123,30 +162,56 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 
 	@Override
 	public void render(float delta) {
-		score++; //System.out.println(score);
-		
+		//while(!lose) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
-		/*verifyIfJumping();
+		if(sonic.getInAir()  && !lose) {
+			//sonic.animation = jumpAnimation;
+			if(sonic.getAscending()) {
+				jumpSpeed -= gravity;
+				if(jumpSpeed <= 0) {
+					sonic.setAscending(false);
+				}
+			}else {
+				if(sonic.getY() <= 30) {
+					sonic.setY(30);
+					sonic.setAscending(true);
+					sonic.setInAir(false);
+					jumpSpeed = 15;
+				}else {
+					jumpSpeed += gravity;
+				}
+			}
+			sonic.jump(jumpSpeed, sonic.getAscending());
+		}
 		
-		if(Gdx.input.isKeyPressed(Keys.UP) && jumpState.equalsIgnoreCase("Ground")) {
-			initiateJump();
+		if(sonic.getRectangleBoundary().overlaps(enemy0.getRectangleBoundary())) {
+			lose = true;
+		}else {
+			enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
+			uiStage.addActor(enemy0);
 		}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			moveRight();
+		
+		if(Gdx.input.isKeyPressed(Keys.UP) && !sonic.getInAir()) {
+			sonic.jump(jumpSpeed, sonic.getAscending());
+			sonic.setAscending(true);
+			sonic.setInAir(true);
 		}
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-			moveLeft();
-		}*/
+		if(Gdx.input.isKeyPressed(Keys.RIGHT) && !lose) {
+			sonic.moveRight(120 * Gdx.graphics.getDeltaTime());
+		}
+		if(Gdx.input.isKeyPressed(Keys.LEFT) && !lose) {
+			sonic.moveLeft(120 * Gdx.graphics.getDeltaTime());
+		}
 		
 		//stateTime += delta;
 		
 		if(bg1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			bg1.setPosition(Launcher.WINDOW_WIDTH, 0);
+			bg1.setPosition(600, 0);
 		}
 		if(bg2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
 			//bg2.setPosition(Launcher.WINDOW_WIDTH, 0);
-			bg2.setPosition(bg1.getX() + 600, 0);
+			bg2.setPosition(600, 0);
 		}
 		if(floor1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
 			floor1.setPosition(Launcher.WINDOW_WIDTH, 0);
@@ -160,8 +225,28 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		floor1.speedX = -120;
 		floor2.speedX = -120;
         
+		if(!lose) {
         mainStage.act(deltaTime);
+		uiStage.act(deltaTime);
+		}
 		
+		if(Gdx.input.isKeyPressed(Keys.ENTER)) {
+			lose = false;
+			sonic.setX(sonic.getOriginX());
+			sonic.setY(sonic.getOriginY());
+			sonic.setAscending(true);
+			sonic.setInAir(false);
+		}
+        
+        if(!lose) {
+        	timeElapsed += 0.2;
+        	timeLabel.setText("Score: " + (int)timeElapsed);
+        }else {
+        	timeElapsed = 0;
+        	//timeLabel.setText("Score: 0");
+        	timeLabel.setText("You Lose! Press ENTER to start over.");
+        }
+        
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
@@ -175,8 +260,6 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		floor.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
 		floor2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
 		
-		game.batch.draw(run[0].getKeyFrame(stateTime, true), actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT);
-		
 		if(score % 500 == 0 || enemy.isOnScreen) {
 			enemy.isOnScreen = true;
 			game.batch.draw(enemy.image, enemy.x, enemy.y);
@@ -188,6 +271,9 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 			}
 		}*/
 		mainStage.draw();
+		uiStage.draw();
+		//}
+		
 	}
 
 	@Override

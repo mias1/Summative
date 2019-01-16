@@ -19,10 +19,12 @@ import com.badlogic.gdx.utils.Array;
 import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.AnimatedActor;
-import Tools.CharacterMoveMechanics;
+import Tools.PhysicsActor;
+import Tools.PhysicsActor0;
+import Tools.ScrollingBackground;
 import Tools.StaticActor;
 
-public class MainGameScreen extends CharacterMoveMechanics implements Screen {
+public class MainGameScreen implements Screen {
 
 	//public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
 	//public static final int CHARACTER_WIDTH = 55;
@@ -33,6 +35,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	
 	TextureRegion[] jumpFrames = new TextureRegion[8];
 	Animation jumpAnimation;
+	Animation moveAnimation;
 	
 	private float timeElapsed;
 	private Label timeLabel;
@@ -41,20 +44,18 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 	
 	float stateTime;
 	
-	public StaticActor bg1, bg2;
-	public StaticActor floor1, floor2;
+	public ScrollingBackground bg;
+	public ScrollingBackground floor;
 	public StaticActor enemy0;
+	
+	int enemySpeed = 3;
 	
 	SonicGame game;
 	
-	final float JUMP_SPEED = 15;
-	float jumpSpeed = JUMP_SPEED;
-	float gravity = 0.75f;
-	
-	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/clouds.png");
+	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
 	private Texture enemy00 = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
-	private AnimatedActor sonic;
+	private PhysicsActor0 sonic;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
@@ -63,47 +64,36 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		uiStage = new Stage();
 		timeElapsed = 0;
 		
-		bg1 = new StaticActor();
-		bg1.setTexture(skyBackground);
-		bg1.setPosition(-300, 0);
-		bg1.setOrigin(-300, 0);
-		bg1.setWidth(Launcher.WINDOW_WIDTH);
-		bg1.setHeight(Launcher.WINDOW_HEIGHT);
-		bg1.speedX = -100;
-		mainStage.addActor(bg1);
+		bg = new ScrollingBackground();
+		bg.setX(0);
+		bg.setY(0);
+		bg.setTexture(skyBackground);
+		bg.setOriginX(0);
+		bg.setOriginY(0);
+		bg.setSpeed(1);
+		bg.setResetPointX(-1200);
+		bg.setWidth(1800);
+		bg.setHeight(Launcher.WINDOW_HEIGHT);
+		mainStage.addActor(bg);
 		
-		bg2 = new StaticActor();
-		bg2.setTexture(skyBackground);
-		bg2.setPosition(300, 0);
-		bg2.setOrigin(300, 0);
-		bg2.setWidth(Launcher.WINDOW_WIDTH);
-		bg2.setHeight(Launcher.WINDOW_HEIGHT);
-		bg2.speedX = -100;
-		mainStage.addActor(bg2);
-		
-		floor1 = new StaticActor();
-		floor1.setTexture(greenHillZoneFloor);
-		floor1.setPosition(0, 0);
-		floor1.setOrigin(0, 0);
-		floor1.setWidth(Launcher.WINDOW_WIDTH);
-		floor1.setHeight(50);
-		floor1.speedX = -120;
-		mainStage.addActor(floor1);
-		
-		floor2 = new StaticActor();
-		floor2.setTexture(greenHillZoneFloor);
-		floor2.setPosition(600, 0);
-		floor2.setOrigin(600, 0);
-		floor2.setWidth(Launcher.WINDOW_WIDTH);
-		floor2.setHeight(50);
-		floor2.speedX = -120;
-		mainStage.addActor(floor2);
+		floor = new ScrollingBackground();
+		floor.setX(0);
+		floor.setY(0);
+		floor.setTexture(greenHillZoneFloor);
+		floor.setOriginX(0);
+		floor.setOriginY(0);
+		floor.setSpeed(3);
+		floor.setResetPointX(-1200);
+		floor.setWidth(1800);
+		floor.setHeight(50);
+		mainStage.addActor(floor);
 		
 		enemy0 = new StaticActor();
 		enemy0.setTexture(enemy00);
-		enemy0.setOrigin(300, 48);
+		enemy0.setPosition(630, 48);
+		enemy0.setOrigin(630, 48);
 		
-        sonic = new AnimatedActor();
+        sonic = new PhysicsActor0();
         TextureRegion[] movingFrames = new TextureRegion[8];
         for (int n = 0; n < 8; n++)
         {   
@@ -115,7 +105,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
         Array<TextureRegion> framesArray = new Array<TextureRegion>(movingFrames);
         
         
-        for (int n = 0; n < 4; n++)
+        for (int n = 0; n < 3; n++)
         {   
             String fileName = "Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonic_jump0" + n + ".png";
             Texture texture = new Texture(Gdx.files.internal(fileName));
@@ -125,7 +115,7 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
         Array<TextureRegion> jumpFramesArray = new Array<TextureRegion>(jumpFrames);
         
         
-        Animation moveAnimation = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP);
+        moveAnimation = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP);
         
         jumpAnimation = new Animation(0.1f, jumpFramesArray, Animation.PlayMode.LOOP);
         
@@ -134,6 +124,10 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
         sonic.setPosition(10, 48);
         sonic.setWidth(55);
         sonic.setHeight(60);
+        sonic.setSpeed(120);
+        sonic.setGravity(0.75f);
+        sonic.setJumpSpeed(15);
+        sonic.setGroundLevel(48);
         uiStage.addActor(sonic);
 		
 		BitmapFont font = new BitmapFont();
@@ -145,8 +139,6 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		uiStage.addActor(timeLabel);
 		
 		lose = false;
-		
-		setMechanics(10, 48, 120, 15, 0.75f, "Ground", 48);
 	}
 	
 	@Override
@@ -169,71 +161,39 @@ public class MainGameScreen extends CharacterMoveMechanics implements Screen {
 		//while(!lose) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
-		if(sonic.getInAir()  && !lose) {
-			//sonic.animation = jumpAnimation;
-			if(sonic.getAscending()) {
-				jumpSpeed -= gravity;
-				if(jumpSpeed <= 0) {
-					sonic.setAscending(false);
-				}
-			}else {
-				if(sonic.getY() <= 30) {
-					sonic.setY(30);
-					sonic.setAscending(true);
-					sonic.setInAir(false);
-					jumpSpeed = 15;
-				}else {
-					jumpSpeed += gravity;
-				}
-			}
-			sonic.jump(jumpSpeed, sonic.getAscending());
+		if(!lose) {
+			sonic.managePhysics();
+			bg.scrollLeft();
+		
+			floor.scrollLeft();
 		}
 		
 		if(sonic.getRectangleBoundary().overlaps(enemy0.getRectangleBoundary())) {
 			lose = true;
 		}else {
-			enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
+			enemy0.setX(enemy0.getX() - enemySpeed);
 			uiStage.addActor(enemy0);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.UP) && !sonic.getInAir()) {
-			sonic.jump(jumpSpeed, sonic.getAscending());
-			sonic.setAscending(true);
-			sonic.setInAir(true);
-		}
-		if(Gdx.input.isKeyPressed(Keys.RIGHT) && !lose) {
-			sonic.moveRight(120 * Gdx.graphics.getDeltaTime());
-		}
-		if(Gdx.input.isKeyPressed(Keys.LEFT) && !lose) {
-			sonic.moveLeft(120 * Gdx.graphics.getDeltaTime());
+			if(enemy0.getX() == -10) {
+				enemy0.setX(enemy0.getOriginX());
+			}
 		}
 		
 		//stateTime += delta;
 		
-		if(bg1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			bg1.setX(Launcher.WINDOW_WIDTH);
-		}
-		if(bg2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			bg2.setX(Launcher.WINDOW_WIDTH);
-		}
-		if(floor1.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			floor1.setX(Launcher.WINDOW_WIDTH);
-		}
-		if(floor2.getX() <= (-1) * Launcher.WINDOW_WIDTH) {
-			floor2.setX(Launcher.WINDOW_WIDTH);
-		}
+		
         
 		if(!lose) {
-        mainStage.act(deltaTime);
-		uiStage.act(deltaTime);
+			mainStage.act(deltaTime);
+			uiStage.act(deltaTime);
 		}
 		
-		if(Gdx.input.isKeyPressed(Keys.ENTER)) {
+		if(Gdx.input.isKeyPressed(Keys.ENTER) && lose) {
 			lose = false;
 			sonic.setX(sonic.getOriginX());
 			sonic.setY(sonic.getOriginY());
 			sonic.setAscending(true);
 			sonic.setInAir(false);
+			enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
 		}
         
         if(!lose) {

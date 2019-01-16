@@ -20,7 +20,6 @@ import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.AnimatedActor;
 import Tools.PhysicsActor;
-import Tools.PhysicsActor0;
 import Tools.ScrollingBackground;
 import Tools.StaticActor;
 
@@ -55,7 +54,7 @@ public class MainGameScreen implements Screen {
 	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
 	private Texture enemy00 = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
-	private PhysicsActor0 sonic;
+	private PhysicsActor sonic;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
 		this.game = game;
@@ -93,7 +92,7 @@ public class MainGameScreen implements Screen {
 		enemy0.setPosition(630, 48);
 		enemy0.setOrigin(630, 48);
 		
-        sonic = new PhysicsActor0();
+        sonic = new PhysicsActor();
         TextureRegion[] movingFrames = new TextureRegion[8];
         for (int n = 0; n < 8; n++)
         {   
@@ -123,8 +122,7 @@ public class MainGameScreen implements Screen {
         sonic.setOrigin(10, 48);
         sonic.setPosition(10, 48);
         sonic.setWidth(55);
-        sonic.setHeight(60);
-        sonic.setSpeed(120);
+        sonic.setHeight(60);        sonic.setSpeed(120);
         sonic.setGravity(0.75f);
         sonic.setJumpSpeed(15);
         sonic.setGroundLevel(48);
@@ -136,7 +134,7 @@ public class MainGameScreen implements Screen {
 		timeLabel = new Label(text, style);
 		timeLabel.setFontScale(2);
 		timeLabel.setPosition(15, 365);
-		uiStage.addActor(timeLabel);
+		mainStage.addActor(timeLabel);
 		
 		lose = false;
 	}
@@ -158,27 +156,13 @@ public class MainGameScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		//while(!lose) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
 		if(!lose) {
 			sonic.managePhysics();
 			bg.scrollLeft();
-		
 			floor.scrollLeft();
 		}
-		
-		if(sonic.getRectangleBoundary().overlaps(enemy0.getRectangleBoundary())) {
-			lose = true;
-		}else {
-			enemy0.setX(enemy0.getX() - enemySpeed);
-			uiStage.addActor(enemy0);
-			if(enemy0.getX() == -10) {
-				enemy0.setX(enemy0.getOriginX());
-			}
-		}
-		
-		//stateTime += delta;
 		
 		
         
@@ -201,37 +185,14 @@ public class MainGameScreen implements Screen {
         	timeLabel.setText("Score: " + (int)timeElapsed);
         }else {
         	timeElapsed = 0;
-        	//timeLabel.setText("Score: 0");
         	timeLabel.setText("You Lose! Press ENTER to start over.");
         }
         
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	
-		/*game.batch.draw(background.image, background.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		game.batch.draw(background2.image, background2.x, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		background.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
-		background2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 2);
 		
-		game.batch.draw(floor.image, floor.x, 0, Launcher.WINDOW_WIDTH, 50);
-		game.batch.draw(floor2.image, floor2.x, 0, Launcher.WINDOW_WIDTH, 50);
-		floor.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
-		floor2.leftScrollUpdate(Launcher.WINDOW_WIDTH * -1, 5);
-		
-		if(score % 500 == 0 || enemy.isOnScreen) {
-			enemy.isOnScreen = true;
-			game.batch.draw(enemy.image, enemy.x, enemy.y);
-			enemy.scroll(actorX, 3);
-			if(!enemy.isAlive(actorX, actorY, CHARACTER_WIDTH, CHARACTER_HEIGHT, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT) ||
-					enemy.x > - 100) {
-				enemy.isOnScreen = false;
-				enemy.x = enemy.startX;
-			}
-		}*/
 		mainStage.draw();
 		uiStage.draw();
-		//}
-		
 	}
 
 	@Override

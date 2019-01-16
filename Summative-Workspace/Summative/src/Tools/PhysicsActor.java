@@ -92,13 +92,4 @@ public class PhysicsActor extends AnimatedActor {
 		manageWalk();
 		manageJump();
 	}
-	
-	public boolean isColliding(StaticActor actor, boolean colliding) {
-		if(getRectangleBoundary().overlaps(actor.getRectangleBoundary())) {
-			colliding = true;
-		}else {
-			colliding = false;
-		}
-		return colliding;
-	}
 }

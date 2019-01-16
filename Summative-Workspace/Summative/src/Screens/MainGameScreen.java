@@ -10,15 +10,14 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
+import Enemies.Rhino;
 import Game.SonicGame;
 import Launchers.Launcher;
-import Tools.AnimatedActor;
 import Tools.PhysicsActor;
 import Tools.ScrollingBackground;
 import Tools.StaticActor;
@@ -45,15 +44,15 @@ public class MainGameScreen implements Screen {
 	
 	public ScrollingBackground bg;
 	public ScrollingBackground floor;
-	public StaticActor enemy0;
 	
-	int enemySpeed = 3;
+	ublic Rhino r;
+	public PhysicsActor[] enemies;
 	
 	SonicGame game;
 	
 	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
-	private Texture enemy00 = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
+	//private Texture rhino = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
 	private PhysicsActor sonic;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
@@ -62,6 +61,8 @@ public class MainGameScreen implements Screen {
 		mainStage = new Stage();
 		uiStage = new Stage();
 		timeElapsed = 0;
+		
+		r = new Rhino();
 		
 		bg = new ScrollingBackground();
 		bg.setX(0);
@@ -86,11 +87,6 @@ public class MainGameScreen implements Screen {
 		floor.setWidth(1800);
 		floor.setHeight(50);
 		mainStage.addActor(floor);
-		
-		enemy0 = new StaticActor();
-		enemy0.setTexture(enemy00);
-		enemy0.setPosition(630, 48);
-		enemy0.setOrigin(630, 48);
 		
         sonic = new PhysicsActor();
         TextureRegion[] movingFrames = new TextureRegion[8];
@@ -162,9 +158,8 @@ public class MainGameScreen implements Screen {
 			sonic.managePhysics();
 			bg.scrollLeft();
 			floor.scrollLeft();
+			r.move();
 		}
-		
-		
         
 		if(!lose) {
 			mainStage.act(deltaTime);
@@ -177,7 +172,7 @@ public class MainGameScreen implements Screen {
 			sonic.setY(sonic.getOriginY());
 			sonic.setAscending(true);
 			sonic.setInAir(false);
-			enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
+			//enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
 		}
         
         if(!lose) {

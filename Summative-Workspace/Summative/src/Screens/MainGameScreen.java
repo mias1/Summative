@@ -1,5 +1,7 @@
 package Screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -11,14 +13,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
-import Enemies.Rhino;
 import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.PhysicsActor;
+import Tools.Rhino;
 import Tools.ScrollingBackground;
 import Tools.StaticActor;
 
@@ -45,14 +48,13 @@ public class MainGameScreen implements Screen {
 	public ScrollingBackground bg;
 	public ScrollingBackground floor;
 	
-	ublic Rhino r;
-	public PhysicsActor[] enemies;
+	public PhysicsActor[] enemies = new PhysicsActor[1];
 	
 	SonicGame game;
 	
 	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
-	//private Texture rhino = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
+	private Texture rhinoTexture = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
 	private PhysicsActor sonic;
 	
 	public MainGameScreen(SonicGame game, String characterSelected) {
@@ -61,8 +63,6 @@ public class MainGameScreen implements Screen {
 		mainStage = new Stage();
 		uiStage = new Stage();
 		timeElapsed = 0;
-		
-		r = new Rhino();
 		
 		bg = new ScrollingBackground();
 		bg.setX(0);
@@ -99,31 +99,39 @@ public class MainGameScreen implements Screen {
         }
         Array<TextureRegion> framesArray = new Array<TextureRegion>(movingFrames);
         
-        
-        for (int n = 0; n < 3; n++)
-        {   
-            String fileName = "Summative-Workspace/Summative/Character Sprites/Sonic Sprites/sonic_jump0" + n + ".png";
-            Texture texture = new Texture(Gdx.files.internal(fileName));
-            texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-            jumpFrames[n] = new TextureRegion(texture);
-        }
-        Array<TextureRegion> jumpFramesArray = new Array<TextureRegion>(jumpFrames);
-        
-        
         moveAnimation = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP);
-        
-        jumpAnimation = new Animation(0.1f, jumpFramesArray, Animation.PlayMode.LOOP);
         
         sonic.setAnimation(moveAnimation);
         sonic.setOrigin(10, 48);
         sonic.setPosition(10, 48);
         sonic.setWidth(55);
-        sonic.setHeight(60);        sonic.setSpeed(120);
+        sonic.setHeight(60);   
+        sonic.setSpeed(120);
         sonic.setGravity(0.75f);
         sonic.setJumpSpeed(15);
         sonic.setGroundLevel(48);
         uiStage.addActor(sonic);
 		
+        TextureRegion[] rhinoFrames = new TextureRegion[1];
+        rhinoFrames[0] = new TextureRegion(rhinoTexture);
+        
+        Array<TextureRegion> rhinoFramesArray = new Array<TextureRegion>(rhinoFrames);
+        
+        Animation rhinoAnimation = new Animation(0.1f, rhinoFramesArray, Animation.PlayMode.LOOP);
+        
+        enemies[0] = new PhysicsActor();
+        enemies[0].setOriginX(650);
+        enemies[0].setOriginY(48);
+        enemies[0].setAnimation(rhinoAnimation);
+        enemies[0].setSpeed(3);
+        enemies[0].setWidth(55);
+        enemies[0].setHeight(55);
+        enemies[0].setPosition(650, 48);
+        enemies[0].setGravity(0.75f);
+        enemies[0].setJumpSpeed(15);
+        enemies[0].setGroundLevel(48);
+        uiStage.addActor(enemies[0]);
+        
 		BitmapFont font = new BitmapFont();
 		String text = "Time: 0";
 		LabelStyle style = new LabelStyle(font, Color.BLACK);
@@ -154,11 +162,18 @@ public class MainGameScreen implements Screen {
 	public void render(float delta) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		
+		if(!(enemies[0].getX() <= -60)) {
+			uiStage.addActor(enemies[0]);
+			System.out.println(1);
+		}else {
+			enemies[0].addAction(Actions.removeActor());
+		}
+		enemies[0].setX(enemies[0].getX() - enemies[0].getSpeed());
+		
 		if(!lose) {
 			sonic.managePhysics();
 			bg.scrollLeft();
 			floor.scrollLeft();
-			r.move();
 		}
         
 		if(!lose) {

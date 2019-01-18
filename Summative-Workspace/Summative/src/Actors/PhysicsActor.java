@@ -4,7 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 /**
- * Based off of the PhysicsActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
+ * An Actor that has in-game Physics.
+ * @author Jeremias (Based off of the PhysicsActor class in the Ch7 JumpingJack2 project provided on D2L)
  */
 public class PhysicsActor extends AnimatedActor {
 	

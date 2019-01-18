@@ -13,12 +13,20 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.GetterOnlyReflectio
 import Actors.PhysicsActor;
 import Actors.StaticActor;
 
+/**
+ * Manages, Generates and Moves the enemies.
+ * @author Jeremias
+ */
 public class EnemyManager {
 	
 	private static PhysicsActor[] enemies = new PhysicsActor[4];
 	
 	private static boolean ascending = true;
 	
+	/**
+	 * Initializes all crucial attributes of the enemies, such as
+	 * Animation, Origin Points, Physics and more.
+	 */
 	public static void initializeEnemies() {
 		
 		TextureRegion[] rhinoFrames = new TextureRegion[1];
@@ -88,6 +96,11 @@ public class EnemyManager {
 		
 	}
 	
+	/**
+	 * Generates a certain type of enemy (based on probability) on to the screen and makes it move, then removes it once
+	 * it is no longer on the screen, adding another enemy right after.
+	 * @param stage
+	 */
 	public static void generateEnemies(Stage stage) {
 		if(enemyOnScreen(-60, 650) == -1) {
 			Random r = new Random();
@@ -121,14 +134,14 @@ public class EnemyManager {
 				enemies[0].addAction(Actions.removeActor());
 			}
 		}else if(enemyOnScreen(-60, 650) == 1) {
-			moveOne();
+			moveWasp();
 			
 			if(enemies[1].getX() < -60) {
 				enemies[1].setX(651);
 				enemies[1].addAction(Actions.removeActor());
 			}
 		}else if(enemyOnScreen(-60, 650) == 2) {
-			moveTwo();
+			moveBee();
 			
 			if(enemies[2].getX() < -60) {
 				enemies[2].setX(651);
@@ -148,6 +161,12 @@ public class EnemyManager {
 		
 	}
 	
+	/**
+	 * Checks which type of enemy is on the screen.
+	 * @param leftLimit
+	 * @param rightLimit
+	 * @return 
+	 */
 	private static int enemyOnScreen(int leftLimit, int rightLimit) {
 		for(int x = 0; x < 4; ++x) {
 			if(enemies[x].getX() >= leftLimit && enemies[x].getX() <= rightLimit) {
@@ -159,15 +178,24 @@ public class EnemyManager {
 		return -1;
 	}
 
+	/**
+	 * Moves the Rhino enemy.
+	 */
 	private static void moveRhino() {
 		enemies[0].setX(enemies[0].getX() - enemies[0].getSpeed());
 	}
 	
-	private static void moveOne() {
+	/**
+	 * Moves the Wasp enemy.
+	 */
+	private static void moveWasp() {
 		enemies[1].setX(enemies[1].getX() - enemies[1].getSpeed());
 	}
 	
-	private static void moveTwo() {
+	/**
+	 * Moves the Bee enemy
+	 */
+	private static void moveBee() {
 		if(!ascending) {
 			enemies[2].setX(enemies[2].getX() - enemies[2].getSpeed());
 			enemies[2].setY(enemies[2].getY() - enemies[2].getJumpSpeed());
@@ -205,6 +233,11 @@ public class EnemyManager {
 		}
 	}*/
 	
+	/**
+	 * Checks if the main actor is colliding with an enemy.
+	 * @param mainActor
+	 * @return
+	 */
 	public static boolean isColliding(StaticActor mainActor) {
 		for(int x = 0; x < 4; ++x) {
 			if(enemies[x].getRectangleBoundary().overlaps(mainActor.getRectangleBoundary())) {

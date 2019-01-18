@@ -2,6 +2,10 @@ package Tools;
 
 import Actors.StaticActor;
 
+/**
+ * Manages all the aspects of a Scrolling Background.
+ * @author Jeremias
+ */
 public class ScrollingBackground extends StaticActor{
 	
 	private float speed;
@@ -29,7 +33,9 @@ public class ScrollingBackground extends StaticActor{
 		return resetY;
 	}
 	
-	
+	/**
+	 * Scrolls the Background to the left.
+	 */
 	public void scrollLeft() {
 		if(getX() <= resetX) {
 			setX(getOriginX());
@@ -38,6 +44,9 @@ public class ScrollingBackground extends StaticActor{
 		}
 	}
 	
+	/**
+	 * Scrolls the Background to the right.
+	 */
 	public void scrollRight() {
 		if(getX() >= resetX) {
 			setX(getOriginX());
@@ -46,6 +55,9 @@ public class ScrollingBackground extends StaticActor{
 		}
 	}
 	
+	/**
+	 * Scrolls the Background up.
+	 */
 	public void scrollUp() {
 		if(getY() >= resetY) {
 			setY(getOriginY());
@@ -54,6 +66,9 @@ public class ScrollingBackground extends StaticActor{
 		}
 	}
 	
+	/**
+	 * Scrolls the Background down.
+	 */
 	public void scrollDown() {
 		if(getY() <= resetY) {
 			setY(getOriginY());

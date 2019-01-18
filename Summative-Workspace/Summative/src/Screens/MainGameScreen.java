@@ -21,6 +21,10 @@ import Launchers.Launcher;
 import Managers.EnemyManager;
 import Tools.ScrollingBackground;
 
+/**
+ * Renders and Manages the Game Screen.
+ * @author Jeremias
+ */
 public class MainGameScreen implements Screen {
 	
 	public Stage mainStage;
@@ -50,7 +54,7 @@ public class MainGameScreen implements Screen {
 	
 	
 	/**
-	 * Initializes the game object and all visible components seen
+	 * Initializes the SonicGame object and all visible components seen
 	 * in the MainGameScreen.
 	 * @param game
 	 */
@@ -158,6 +162,11 @@ public class MainGameScreen implements Screen {
 		
 	}
 	
+	/**
+	 * Manages crucial game __, such as collision, auto-scroll, score managing, enemy generating 
+	 * and the main actor's physics managing. Also renders the screen.
+	 * @param deltaTime
+	 */
 	public void manageGame(float deltaTime) {
 		if(EnemyManager.isColliding(sonic)) {
 			lose = true;
@@ -183,6 +192,10 @@ public class MainGameScreen implements Screen {
 		drawScreen();
 	}
 	
+	/**
+	 * Takes player back to the main menu if ENTER is clicked when
+	 * player has loses.
+	 */
 	private void returnToMenu() {
 		if(Gdx.input.isKeyJustPressed(Keys.ENTER) && lose) {
 			lose = false;
@@ -194,6 +207,9 @@ public class MainGameScreen implements Screen {
 		}
 	}
 	
+	/**
+	 * Draws the Main and User interface.
+	 */
 	private void drawScreen() {
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

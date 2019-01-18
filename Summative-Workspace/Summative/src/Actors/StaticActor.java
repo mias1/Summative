@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
- * Based off of the BaseActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
+ * A Base Actor that has no animation or physics.
+ * @author Jeremias (Based off of the BaseActor class in the Ch5 CheesePleaseChapter5 project provided on D2L)
  */
 public class StaticActor extends Actor {
 
@@ -17,6 +18,9 @@ public class StaticActor extends Actor {
 	public float speedX;
 	public float speedY;
 	
+	/**
+	 * Initializes a StaticActor.
+	 */
 	public StaticActor() {
 		super();
 		actorTexture = new TextureRegion();
@@ -38,12 +42,14 @@ public class StaticActor extends Actor {
 		return rectangleBoundary;
 	}
 	    
-	 public void draw(Batch batch, float parentAlpha) {
+	/** 
+	 * Draws a StaticActor
+	 */
+	public void draw(Batch batch, float parentAlpha) {
 	     Color color = getColor();
 	     batch.setColor(color.r, color.g, color.b, color.a);
 	     if (isVisible()) {
 	    	 batch.draw(actorTexture, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 	     }
 	 }
-	
 }

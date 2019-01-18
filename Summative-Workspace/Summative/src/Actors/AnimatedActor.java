@@ -5,7 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 /**
- * Based off of the AnimatedActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
+ * An Actor that has an animation but no physics.
+ * @author Jeremias (Based off of the AnimatedActor class in the Ch5 CheesePleaseChapter5 project provided on D2L)
  */
 public class AnimatedActor extends StaticActor {
 	
@@ -15,6 +16,9 @@ public class AnimatedActor extends StaticActor {
     private boolean inAir;
     private boolean ascending;
 	
+    /**
+     * Initializes an AnimatedActor.
+     */
     public AnimatedActor() {
         super();
         elapsedTime = 0;
@@ -33,17 +37,12 @@ public class AnimatedActor extends StaticActor {
         elapsedTime += deltaTime;
     }
 
+    /**
+     * @see Actors.StaticActor#draw(com.badlogic.gdx.graphics.g2d.Batch, float)
+     */
     public void draw(Batch batch, float parentAlpha) {
         actorTexture.setRegion(animation.getKeyFrame(elapsedTime));
         super.draw(batch, parentAlpha);
-    }
-    
-    public void moveRight(float speed) {
-    	setX(getX() + speed);
-    }
-    
-    public void moveLeft(float speed) {
-    	setX(getX() - speed);
     }
     
     public boolean getInAir() {
@@ -60,13 +59,5 @@ public class AnimatedActor extends StaticActor {
     
     public void setAscending(boolean ascending) {
     	this.ascending = ascending;
-    }
-    
-    public void jump(float speed, boolean ascending) {
-    	if(ascending) {
-    		setY(getY() + speed);
-    	}else {
-    		setY(getY() - speed);
-    	}
     }
 }

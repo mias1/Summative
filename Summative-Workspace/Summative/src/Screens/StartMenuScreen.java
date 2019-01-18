@@ -10,6 +10,10 @@ import Game.SonicGame;
 import Launchers.Launcher;
 import Tools.ScrollingBackground;
 
+/**
+ * Renders and Manages the Main Menu Screen
+ * @author Jeremias
+ */
 public class StartMenuScreen implements Screen {
 
 	private static final int PLAY_BUTTON_WIDTH = 250;
@@ -27,6 +31,11 @@ public class StartMenuScreen implements Screen {
 	
 	ScrollingBackground skyBackground = new ScrollingBackground();
 	
+	/**
+	 * Initializes the SonicGame object, all visible components seen
+	 * in the StartMenuScreen, Music and Sound Effects.
+	 * @param game
+	 */
 	public StartMenuScreen(SonicGame game) {
 		this.game = game;
 		
@@ -105,5 +114,4 @@ public class StartMenuScreen implements Screen {
 	public void show() {
 		
 	}
-
 }

@@ -1,9 +1,12 @@
-package Tools;
+package Actors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+/**
+ * Based off of the AnimatedActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
+ */
 public class AnimatedActor extends StaticActor {
 	
     public float elapsedTime;

@@ -1,4 +1,4 @@
-package Tools;
+package Actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 /**
  * Based off of the BaseActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
- * @author 574356
- *
  */
 public class StaticActor extends Actor {
 
@@ -39,11 +37,6 @@ public class StaticActor extends Actor {
 		rectangleBoundary.set(getX(), getY(), getWidth(), getHeight());
 		return rectangleBoundary;
 	}
-	
-	 public void act(float delta) {
-	     super.act(delta);
-	     moveBy(speedX * delta, speedY * delta);
-	 }
 	    
 	 public void draw(Batch batch, float parentAlpha) {
 	     Color color = getColor();

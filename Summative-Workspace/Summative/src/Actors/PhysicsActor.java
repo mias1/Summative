@@ -1,9 +1,11 @@
-package Tools;
+package Actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/**
+ * Based off of the PhysicsActor class in the Ch5 CheesePleaseChapter5 project provided on D2L
+ */
 public class PhysicsActor extends AnimatedActor {
 	
 	private int speed;
@@ -42,6 +44,10 @@ public class PhysicsActor extends AnimatedActor {
 		return groundLevel;
 	}
 	
+	
+	/**
+	 * Fully performs the jump action.
+	 */
 	private void manageJump() {
 		if(jumpState.equalsIgnoreCase("Descending")) {
 			if(getY() <= groundLevel) {
@@ -71,23 +77,38 @@ public class PhysicsActor extends AnimatedActor {
 		}
 	}
 	
+	
+	/**
+	 * Makes the actor walk.
+	 */
 	private void manageWalk() {
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
+		if(getX() < 0) {
+			setX(1);
+		}
+		if(getX() > 250) {
+			setX(249);
+		}
+		
+		if(Gdx.input.isKeyPressed(Keys.RIGHT) && (getX() >= 0 && getX() <= 250)) {
 			if(!jumpState.equalsIgnoreCase("Ground")) {
-				setX(getX() + (speed - (speed / 3)) * Gdx.graphics.getDeltaTime());
+				setX(getX() + (speed) * Gdx.graphics.getDeltaTime());
 			}else {
 				setX(getX() + speed * Gdx.graphics.getDeltaTime());
 			}
 		}
-		if(Gdx.input.isKeyPressed(Keys.LEFT)) {
+		
+		if(Gdx.input.isKeyPressed(Keys.LEFT) && (getX() >= 0 && getX() <= 250)) {
 			if(!jumpState.equalsIgnoreCase("Ground")) {
-				setX(getX() - (speed - (speed / 2)) * Gdx.graphics.getDeltaTime());
+				setX(getX() - (speed) * Gdx.graphics.getDeltaTime());
 			}else {
 				setX(getX() - speed * Gdx.graphics.getDeltaTime());
 			}
 		}
 	}
 	
+	/**
+	 * Manages both the jump and walk actions.
+	 */
 	public void managePhysics() {
 		manageWalk();
 		manageJump();

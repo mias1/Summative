@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 import Game.SonicGame;
 import Launchers.Launcher;
+import Tools.ScrollingBackground;
 
 public class StartMenuScreen implements Screen {
 
@@ -22,17 +23,25 @@ public class StartMenuScreen implements Screen {
 	
 	Texture playButtonActive;
 	Texture playButtonInactive;
-	Texture skyBackground;
 	Texture title;
 	
-	int xBackground1 = -300;
-	int xBackground2 = 300;
+	ScrollingBackground skyBackground = new ScrollingBackground();
 	
 	public StartMenuScreen(SonicGame game) {
 		this.game = game;
+		
+		skyBackground.setTexture(new Texture("Summative-Workspace/Summative/assets/sky_background.png"));
+		skyBackground.setX(0);
+		skyBackground.setY(0);
+		skyBackground.setOriginX(0);
+		skyBackground.setOriginY(0);
+		skyBackground.setSpeed(5);
+		skyBackground.setResetPointX(-1200);
+		skyBackground.setWidth(1800);
+		skyBackground.setHeight(Launcher.WINDOW_HEIGHT);
+		
 		playButtonActive = new Texture("Summative-Workspace/Summative/assets/play_button_active.png");
 		playButtonInactive = new Texture("Summative-Workspace/Summative/assets/play_button_inactive.png");
-		skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
 		title = new Texture("Summative-Workspace/Summative/assets/Title.png");
 		backgroundMusic = Gdx.audio.newSound(Gdx.files.internal("Summative-Workspace/Summative/music/MainMenuTheme.ogg"));
 		backgroundMusic.loop(0.05f);
@@ -59,17 +68,8 @@ public class StartMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		
-		game.batch.draw(skyBackground, xBackground1, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		game.batch.draw(skyBackground, xBackground2, 0, Launcher.WINDOW_WIDTH, Launcher.WINDOW_HEIGHT);
-		
-		if(xBackground1>=600) {
-			xBackground1=-600;
-		}
-		if(xBackground2>=600) {
-			xBackground2=-600;
-		}
-		xBackground1 += 5;
-		xBackground2 += 5;
+		game.batch.draw(skyBackground.actorTexture, skyBackground.getX(), skyBackground.getY());
+		skyBackground.scrollLeft();
 		
 		game.batch.draw(title, Launcher.WINDOW_WIDTH / 2 - 400 / 2, Launcher.WINDOW_HEIGHT - 150, 400, 150);
 		
@@ -81,7 +81,7 @@ public class StartMenuScreen implements Screen {
 				buttonSE.play(0.1f);
 				backgroundMusic.stop();
 				this.dispose();
-				game.setScreen(new MainMenuScreen(game));
+				game.setScreen(new MainGameScreen(game));
 			}
 		}else {
 			game.batch.draw(playButtonInactive, x, PLAY_BUTTON_Y,  PLAY_BUTTON_WIDTH, PLAY_BUTTON_HEIGHT);	

@@ -1,7 +1,5 @@
 package Screens;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -13,23 +11,17 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.utils.Array;
 
+import Actors.PhysicsActor;
 import Game.SonicGame;
 import Launchers.Launcher;
-import Tools.PhysicsActor;
-import Tools.Rhino;
+import Managers.EnemyManager;
 import Tools.ScrollingBackground;
-import Tools.StaticActor;
 
 public class MainGameScreen implements Screen {
-
-	//public static final float CHARACTER_ANIMATION_SPEED = 0.089f;
-	//public static final int CHARACTER_WIDTH = 55;
-	//public static final int CHARACTER_HEIGHT = 60;
 	
 	public Stage mainStage;
 	public Stage uiStage;
@@ -45,19 +37,18 @@ public class MainGameScreen implements Screen {
 	
 	float stateTime;
 	
+	boolean ascending = true;
+	
 	public ScrollingBackground bg;
 	public ScrollingBackground floor;
 	
-	public PhysicsActor[] enemies = new PhysicsActor[1];
+	public PhysicsActor[] enemies = new PhysicsActor[4];
 	
 	SonicGame game;
 	
-	private Texture skyBackground = new Texture("Summative-Workspace/Summative/assets/sky_background.png");
-	private Texture greenHillZoneFloor = new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png");
-	private Texture rhinoTexture = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
 	private PhysicsActor sonic;
 	
-	public MainGameScreen(SonicGame game, String characterSelected) {
+	public MainGameScreen(SonicGame game) {
 		this.game = game;
 		
 		mainStage = new Stage();
@@ -67,7 +58,7 @@ public class MainGameScreen implements Screen {
 		bg = new ScrollingBackground();
 		bg.setX(0);
 		bg.setY(0);
-		bg.setTexture(skyBackground);
+		bg.setTexture(new Texture("Summative-Workspace/Summative/assets/sky_background.png"));
 		bg.setOriginX(0);
 		bg.setOriginY(0);
 		bg.setSpeed(1);
@@ -79,7 +70,7 @@ public class MainGameScreen implements Screen {
 		floor = new ScrollingBackground();
 		floor.setX(0);
 		floor.setY(0);
-		floor.setTexture(greenHillZoneFloor);
+		floor.setTexture(new Texture("Summative-Workspace/Summative/assets/plainGreenHillZoneFloor.png"));
 		floor.setOriginX(0);
 		floor.setOriginY(0);
 		floor.setSpeed(3);
@@ -112,25 +103,9 @@ public class MainGameScreen implements Screen {
         sonic.setGroundLevel(48);
         uiStage.addActor(sonic);
 		
-        TextureRegion[] rhinoFrames = new TextureRegion[1];
-        rhinoFrames[0] = new TextureRegion(rhinoTexture);
         
-        Array<TextureRegion> rhinoFramesArray = new Array<TextureRegion>(rhinoFrames);
+        EnemyManager.initializeEnemies();
         
-        Animation rhinoAnimation = new Animation(0.1f, rhinoFramesArray, Animation.PlayMode.LOOP);
-        
-        enemies[0] = new PhysicsActor();
-        enemies[0].setOriginX(650);
-        enemies[0].setOriginY(48);
-        enemies[0].setAnimation(rhinoAnimation);
-        enemies[0].setSpeed(3);
-        enemies[0].setWidth(55);
-        enemies[0].setHeight(55);
-        enemies[0].setPosition(650, 48);
-        enemies[0].setGravity(0.75f);
-        enemies[0].setJumpSpeed(15);
-        enemies[0].setGroundLevel(48);
-        uiStage.addActor(enemies[0]);
         
 		BitmapFont font = new BitmapFont();
 		String text = "Time: 0";
@@ -142,7 +117,51 @@ public class MainGameScreen implements Screen {
 		
 		lose = false;
 	}
-	
+
+	@Override
+	public void render(float delta) {
+		float deltaTime = Gdx.graphics.getDeltaTime();
+		
+		if(!lose) {
+			sonic.managePhysics();
+			bg.scrollLeft();
+			floor.scrollLeft();
+			EnemyManager.generateEnemies(uiStage);
+		}
+        
+		if(!lose) {
+			mainStage.act(deltaTime);
+			uiStage.act(deltaTime);
+		}
+		
+		if(Gdx.input.isKeyJustPressed(Keys.ENTER) && lose) {
+			lose = false;
+			sonic.setX(sonic.getOriginX());
+			sonic.setY(sonic.getOriginY());
+			sonic.setAscending(true);
+			sonic.setInAir(false);
+			game.setScreen(new StartMenuScreen(game));
+		}
+        
+        if(!lose) {
+        	timeElapsed += 0.2;
+        	timeLabel.setText("Score: " + (int)timeElapsed);
+        }else {
+        	timeElapsed = 0;
+        	timeLabel.setText("You Lose! Press ENTER to return to menu.");
+        }
+        
+		Gdx.gl.glClearColor(0, 0, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		mainStage.draw();
+		uiStage.draw();
+		
+		if(EnemyManager.isColliding(sonic)) {
+			lose = true;
+		}
+	}
+
 	@Override
 	public void dispose() {
 		
@@ -157,54 +176,7 @@ public class MainGameScreen implements Screen {
 	public void pause() {
 		
 	}
-
-	@Override
-	public void render(float delta) {
-		float deltaTime = Gdx.graphics.getDeltaTime();
-		
-		if(!(enemies[0].getX() <= -60)) {
-			uiStage.addActor(enemies[0]);
-			System.out.println(1);
-		}else {
-			enemies[0].addAction(Actions.removeActor());
-		}
-		enemies[0].setX(enemies[0].getX() - enemies[0].getSpeed());
-		
-		if(!lose) {
-			sonic.managePhysics();
-			bg.scrollLeft();
-			floor.scrollLeft();
-		}
-        
-		if(!lose) {
-			mainStage.act(deltaTime);
-			uiStage.act(deltaTime);
-		}
-		
-		if(Gdx.input.isKeyPressed(Keys.ENTER) && lose) {
-			lose = false;
-			sonic.setX(sonic.getOriginX());
-			sonic.setY(sonic.getOriginY());
-			sonic.setAscending(true);
-			sonic.setInAir(false);
-			//enemy0.setPosition(enemy0.getOriginX(), enemy0.getOriginY());
-		}
-        
-        if(!lose) {
-        	timeElapsed += 0.2;
-        	timeLabel.setText("Score: " + (int)timeElapsed);
-        }else {
-        	timeElapsed = 0;
-        	timeLabel.setText("You Lose! Press ENTER to start over.");
-        }
-        
-		Gdx.gl.glClearColor(0, 0, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		mainStage.draw();
-		uiStage.draw();
-	}
-
+	
 	@Override
 	public void resize(int arg0, int arg1) {
 		

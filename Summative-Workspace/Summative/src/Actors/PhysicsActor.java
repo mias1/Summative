@@ -8,17 +8,17 @@ import com.badlogic.gdx.Input.Keys;
  */
 public class PhysicsActor extends AnimatedActor {
 	
-	private int speed;
+	private float speed;
 	private float gravity;
 	private float jumpSpeed;
 	private int groundLevel;
 	private String jumpState = "Ground";
 	private float initialJumpSpeed;
 	
-	public void setSpeed(int speed) {
+	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
-	public int getSpeed() {
+	public float getSpeed() {
 		return speed;
 	}
 	

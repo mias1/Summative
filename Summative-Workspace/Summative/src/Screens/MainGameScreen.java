@@ -48,6 +48,12 @@ public class MainGameScreen implements Screen {
 	
 	private PhysicsActor sonic;
 	
+	
+	/**
+	 * Initializes the game object and all visible components seen
+	 * in the MainGameScreen.
+	 * @param game
+	 */
 	public MainGameScreen(SonicGame game) {
 		this.game = game;
 		
@@ -89,7 +95,6 @@ public class MainGameScreen implements Screen {
             movingFrames[n] = new TextureRegion(texture);
         }
         Array<TextureRegion> framesArray = new Array<TextureRegion>(movingFrames);
-        
         moveAnimation = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP);
         
         sonic.setAnimation(moveAnimation);
@@ -103,12 +108,10 @@ public class MainGameScreen implements Screen {
         sonic.setGroundLevel(48);
         uiStage.addActor(sonic);
 		
-        
         EnemyManager.initializeEnemies();
         
-        
 		BitmapFont font = new BitmapFont();
-		String text = "Time: 0";
+		String text = "Score: 0";
 		LabelStyle style = new LabelStyle(font, Color.BLACK);
 		timeLabel = new Label(text, style);
 		timeLabel.setFontScale(2);
@@ -121,45 +124,8 @@ public class MainGameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		float deltaTime = Gdx.graphics.getDeltaTime();
-		
-		if(!lose) {
-			sonic.managePhysics();
-			bg.scrollLeft();
-			floor.scrollLeft();
-			EnemyManager.generateEnemies(uiStage);
-		}
         
-		if(!lose) {
-			mainStage.act(deltaTime);
-			uiStage.act(deltaTime);
-		}
-		
-		if(Gdx.input.isKeyJustPressed(Keys.ENTER) && lose) {
-			lose = false;
-			sonic.setX(sonic.getOriginX());
-			sonic.setY(sonic.getOriginY());
-			sonic.setAscending(true);
-			sonic.setInAir(false);
-			game.setScreen(new StartMenuScreen(game));
-		}
-        
-        if(!lose) {
-        	timeElapsed += 0.2;
-        	timeLabel.setText("Score: " + (int)timeElapsed);
-        }else {
-        	timeElapsed = 0;
-        	timeLabel.setText("You Lose! Press ENTER to return to menu.");
-        }
-        
-		Gdx.gl.glClearColor(0, 0, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		mainStage.draw();
-		uiStage.draw();
-		
-		if(EnemyManager.isColliding(sonic)) {
-			lose = true;
-		}
+		manageGame(deltaTime);
 	}
 
 	@Override
@@ -192,4 +158,47 @@ public class MainGameScreen implements Screen {
 		
 	}
 	
+	public void manageGame(float deltaTime) {
+		if(EnemyManager.isColliding(sonic)) {
+			lose = true;
+		}
+		
+		if(!lose) {
+			sonic.managePhysics();
+			bg.scrollLeft();
+			floor.scrollLeft();
+			EnemyManager.generateEnemies(uiStage);
+			
+			mainStage.act(deltaTime);
+			uiStage.act(deltaTime);
+			
+			timeElapsed += 0.2;
+        	timeLabel.setText("Score: " + (int)timeElapsed);
+		}else {
+			timeLabel.setPosition(15, 350);
+        	timeLabel.setText("Score: " + (int)timeElapsed + "\nYou lose! Press ENTER to return to menu.");
+		}
+		
+		returnToMenu();
+		drawScreen();
+	}
+	
+	private void returnToMenu() {
+		if(Gdx.input.isKeyJustPressed(Keys.ENTER) && lose) {
+			lose = false;
+			sonic.setX(sonic.getOriginX());
+			sonic.setY(sonic.getOriginY());
+			sonic.setAscending(true);
+			sonic.setInAir(false);
+			game.setScreen(new StartMenuScreen(game));
+		}
+	}
+	
+	private void drawScreen() {
+		Gdx.gl.glClearColor(0, 0, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		mainStage.draw();
+		uiStage.draw();
+	}
 }

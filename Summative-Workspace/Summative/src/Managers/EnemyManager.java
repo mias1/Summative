@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
+import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.GetterOnlyReflection;
 
 import Actors.PhysicsActor;
 import Actors.StaticActor;
@@ -16,50 +17,58 @@ public class EnemyManager {
 	
 	private static PhysicsActor[] enemies = new PhysicsActor[4];
 	
-	private static Texture rhinoTexture = new Texture("Summative-Workspace/Summative/Character Sprites/enemy00_00.png");
-	
 	private static boolean ascending = true;
 	
 	public static void initializeEnemies() {
 		
 		TextureRegion[] rhinoFrames = new TextureRegion[1];
-        rhinoFrames[0] = new TextureRegion(rhinoTexture);
-        
+        rhinoFrames[0] = new TextureRegion(new Texture("Summative-Workspace/Summative/Character Sprites/Enemy Sprites/Rhino.png"));
         Array<TextureRegion> rhinoFramesArray = new Array<TextureRegion>(rhinoFrames);
-        
         Animation rhinoAnimation = new Animation(0.1f, rhinoFramesArray, Animation.PlayMode.LOOP);
 		
 		enemies[0] = new PhysicsActor();
         enemies[0].setOriginX(651);
         enemies[0].setOriginY(48);
         enemies[0].setAnimation(rhinoAnimation);
-        enemies[0].setSpeed(3);
+        enemies[0].setSpeed(5);
         enemies[0].setWidth(55);
-        enemies[0].setHeight(55);
+        enemies[0].setHeight(51);
         enemies[0].setPosition(651, 48);
         enemies[0].setGravity(0.75f);
         enemies[0].setJumpSpeed(15);
         enemies[0].setGroundLevel(48);
         
+        
+        TextureRegion[] waspFrames = new TextureRegion[1];
+        waspFrames[0] = new TextureRegion(new Texture("Summative-Workspace/Summative/Character Sprites/Enemy Sprites/Wasp.png"));
+        Array<TextureRegion> waspFramesArray = new Array<TextureRegion>(waspFrames);
+        Animation waspAnimation = new Animation(0.1f, waspFramesArray, Animation.PlayMode.LOOP);
+        
         enemies[1] = new PhysicsActor();
         enemies[1].setOriginX(651);
         enemies[1].setOriginY(97);
-        enemies[1].setAnimation(rhinoAnimation);
-        enemies[1].setSpeed(5);
-        enemies[1].setWidth(55);
-        enemies[1].setHeight(55);
+        enemies[1].setAnimation(waspAnimation);
+        enemies[1].setSpeed(9);
+        enemies[1].setWidth(58);
+        enemies[1].setHeight(38);
         enemies[1].setPosition(651, 97);
         enemies[1].setGravity(0.75f);
         enemies[1].setJumpSpeed(15);
         enemies[1].setGroundLevel(97);
         
+        
+        TextureRegion[] beeFrames = new TextureRegion[1];
+        beeFrames[0] = new TextureRegion(new Texture("Summative-Workspace/Summative/Character Sprites/Enemy Sprites/Bee.png"));
+        Array<TextureRegion> beeFramesArray = new Array<TextureRegion>(beeFrames);
+        Animation beeAnimation = new Animation(0.1f, beeFramesArray, Animation.PlayMode.LOOP);
+        
         enemies[2] = new PhysicsActor();
         enemies[2].setOriginX(651);
         enemies[2].setOriginY(55);
-        enemies[2].setAnimation(rhinoAnimation);
-        enemies[2].setSpeed(3);
-        enemies[2].setWidth(55);
-        enemies[2].setHeight(55);
+        enemies[2].setAnimation(beeAnimation);
+        enemies[2].setSpeed(1.5f);
+        enemies[2].setWidth(42);
+        enemies[2].setHeight(50);
         enemies[2].setPosition(651, 55);
         enemies[2].setGravity(0.23f);
         enemies[2].setJumpSpeed(8);
@@ -70,8 +79,8 @@ public class EnemyManager {
         enemies[3].setOriginY(48);
         enemies[3].setAnimation(rhinoAnimation);
         enemies[3].setSpeed(2);
-        enemies[3].setWidth(55);
-        enemies[3].setHeight(55);
+        enemies[3].setWidth(29);
+        enemies[3].setHeight(37);
         enemies[3].setPosition(651, 48);
         enemies[3].setGravity(0.75f);
         enemies[3].setJumpSpeed(15);
@@ -85,16 +94,19 @@ public class EnemyManager {
 			
 			int index = r.nextInt(100) + 1;
 			
-			if(index <= 50) {
+			if(index <= 40) {
 				enemies[0].setX(650);
 				stage.addActor(enemies[0]);
 			}
-			if(index > 50 && index <= 80) {
+			if(index > 40 && index <= 75) {
 				enemies[1].setX(650);
 				stage.addActor(enemies[1]);
 			}
-			if(index > 80 && index <= 100) {
+			if(index > 75 && index <= 100) {
 				enemies[2].setX(650);
+				enemies[2].setY(enemies[2].getOriginY());
+				enemies[2].setJumpSpeed(8);
+				ascending = true;
 				stage.addActor(enemies[2]);
 			}
 			/*if(index > 90 && index <= 100) {
@@ -120,6 +132,9 @@ public class EnemyManager {
 			
 			if(enemies[2].getX() < -60) {
 				enemies[2].setX(651);
+				enemies[2].setY(55);
+				enemies[2].setJumpSpeed(8);
+				ascending = true;
 				enemies[2].addAction(Actions.removeActor());
 			}
 		}/*else if(enemyOnScreen(-60, 650) == 3) {

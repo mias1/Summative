@@ -107,15 +107,15 @@ public class EnemyManager {
 			
 			int index = r.nextInt(100) + 1;
 			
-			if(index <= 40) {
+			if(index <= 50) {
 				enemies[0].setX(650);
 				stage.addActor(enemies[0]);
 			}
-			if(index > 40 && index <= 75) {
+			if(index > 50 && index <= 85) {
 				enemies[1].setX(650);
 				stage.addActor(enemies[1]);
 			}
-			if(index > 75 && index <= 100) {
+			if(index > 85 && index <= 100) {
 				enemies[2].setX(650);
 				enemies[2].setY(enemies[2].getOriginY());
 				enemies[2].setJumpSpeed(8);

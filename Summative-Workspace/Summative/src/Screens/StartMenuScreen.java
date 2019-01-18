@@ -77,8 +77,8 @@ public class StartMenuScreen implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		
-		game.batch.draw(skyBackground.actorTexture, skyBackground.getX(), skyBackground.getY());
 		skyBackground.scrollLeft();
+		game.batch.draw(skyBackground.actorTexture, skyBackground.getX(), skyBackground.getY(), skyBackground.getWidth(), skyBackground.getHeight());
 		
 		game.batch.draw(title, Launcher.WINDOW_WIDTH / 2 - 400 / 2, Launcher.WINDOW_HEIGHT - 150, 400, 150);
 		

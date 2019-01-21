@@ -163,7 +163,7 @@ public class MainGameScreen implements Screen {
 	}
 	
 	/**
-	 * Manages crucial game __, such as collision, auto-scroll, score managing, enemy generating 
+	 * Manages crucial game components, such as collision, auto-scroll, score managing, enemy generating 
 	 * and the main actor's physics managing. Also renders the screen.
 	 * @param deltaTime
 	 */
@@ -211,7 +211,6 @@ public class MainGameScreen implements Screen {
 	 * Draws the Main and User interface.
 	 */
 	private void drawScreen() {
-		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		mainStage.draw();
